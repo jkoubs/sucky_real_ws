@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<robot name="sweeper" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="intertial_macros.xacro"/>
+  <xacro:include filename="$(find sucky_bringup)/urdf/sensor_d455.urdf.xacro"/>
+
+  <!-- Define robot constants -->
+  <xacro:property name="chassis_width" value="0.8636"/> <!--34"-->
+  <xacro:property name="chassis_length" value="0.889"/>  <!--35"-->
+  <xacro:property name="chassis_height" value="0.527"/> <!--20.75"-->
+  <xacro:property name="chassis_mass" value="5"/>
+
+  <xacro:property name="wheel_radius" value="0.127"/> <!--5"-->
+  <xacro:property name="wheel_thickness" value="0.038862"/> <!-- 1.53" -->
+  <xacro:property name="wheel_offset_y" value="0.287147"/>  <!-- (11.305") from center of axle to inside edge--> 
+  <xacro:property name="wheel_offset_z" value="0.0"/> <!--not used-->
+  <xacro:property name="wheel_offset_x" value="0.325628"/> <!-- (12.82") from center of wheel to back edge of chasis-->
+  <xacro:property name="wheel_mass" value=".5"/>
+
+  <xacro:property name="omni_wheel_mass" value=".2"/>
+  <xacro:property name="omni_wheel_radius" value="0.0635"/> <!-- 2.5"-->
+  <xacro:property name="omni_wheel_offset_z" value="0.0635"/> <!-- (2.5") center of wheel to center of main axle-->
+  <xacro:property name="omni_wheel_offset_x" value="0.2406396"/> <!-- (9.474") center of wheel to center of main axle-->
+  <xacro:property name="omni_wheel_offset_y" value="0.2752344"/> <!-- (10.836") center of wheel to center of main axle -->
+  
+  <!-- chasis bottom point is the back bottom metal frame near the motors -->
+  <!-- mass inaccurate, only matters for simulation -->
+
+  <!-- colors for RViz visualization-->
+  <material name="orange">
+    <color rgba="1 .3 .1 0.7" />
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 0.7" />
+  </material>
+
+  <!-- base footprint-->
+  <link name="base_footprint"/>
+  <!-- base link-->
+  <link name="base_link"/>
+
+
+  <!-- base_footprint link-->
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+  </joint>
+  <!-- chassis link -->
+  <joint name="chassis_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+    <origin xyz="0 0 -0.127"/>
+  </joint>
+
+  <link name="chassis">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+      <geometry>
+        <mesh filename="package://sucky_bringup/meshes/Sucky.stl" scale="1 1 1" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+      <geometry>
+        <mesh filename="package://sucky_bringup/meshes/Sucky.stl" scale="1 1 1" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- LEFT WHEEL LINK -->
+  <joint name="left_wheel_joint" type="continuous"> 
+      <parent link="base_link"/>
+      <child link="left_wheel"/>
+      <origin xyz="0 ${wheel_offset_y} 0" rpy="0 0 0" />
+      <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="left_wheel">
+      <visual>
+          <geometry>
+              <mesh filename="package://sucky_bringup/meshes/Big_Wheel.stl" scale="0.001 0.001 0.001" />
+          </geometry>
+          <material name="black"/>
+      </visual>
+      <collision>
+          <geometry>
+              <mesh filename="package://sucky_bringup/meshes/Big_Wheel.stl" scale="0.001 0.001 0.001" />
+          </geometry>
+      </collision>
+  </link>
+
+
+  <!-- RIGHT WHEEL LINK -->
+  <joint name="right_wheel_joint" type="continuous"> <!-- change back to continuous-->
+      <parent link="base_link"/>
+      <child link="right_wheel"/>
+      <origin xyz="0 ${-wheel_offset_y} 0" rpy="0 0 ${pi}" />
+      <axis xyz="0 -1 0"/>
+  </joint>
+
+  <link name="right_wheel">
+      <visual>
+          <geometry>
+              <mesh filename="package://sucky_bringup/meshes/Big_Wheel.stl" scale="0.001 0.001 0.001" />
+          </geometry>
+          <material name="black"/>
+      </visual>
+      <collision>
+          <geometry>
+              <mesh filename="package://sucky_bringup/meshes/Big_Wheel.stl" scale="0.001 0.001 0.001" />
+          </geometry>
+      </collision>
+  </link>
+
+  <!-- LEFT OMNI WHEEL LINK -->
+  <joint name="left_omni_wheel_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="left_omni_wheel"/>
+      <origin xyz="${-omni_wheel_offset_x} ${omni_wheel_offset_y} ${-omni_wheel_offset_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="left_omni_wheel">
+      <visual>
+          <geometry>
+              <sphere radius="${omni_wheel_radius}"/>
+          </geometry>
+          <material name="black"/>
+      </visual>
+      <collision>
+          <geometry>
+              <sphere radius="${omni_wheel_radius}"/>
+          </geometry>
+      </collision>
+  </link>
+
+  <!-- RIGHT OMNI WHEEL LINK -->
+  <joint name="right_omni_wheel_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="right_omni_wheel"/>
+      <origin xyz="${-omni_wheel_offset_x} ${-omni_wheel_offset_y} ${-omni_wheel_offset_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_omni_wheel">
+      <visual>
+          <geometry>
+              <sphere radius="${omni_wheel_radius}"/>
+          </geometry>
+          <material name="black"/>
+      </visual>
+      <collision>
+          <geometry>
+              <sphere radius="${omni_wheel_radius}"/>
+          </geometry>
+      </collision>
+  </link>    
+
+  <xacro:sensor_d455 parent="base_link" name="d455" use_nominal_extrinsics="true">
+    <origin xyz="0.237871 0 0.5441188" rpy="0 0 0"/>
+  </xacro:sensor_d455>
+
+</robot>
