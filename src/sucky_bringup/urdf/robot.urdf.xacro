@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="sucky_bringup">
+
+    <xacro:include filename="$(find sucky_bringup)/urdf/robot_core.xacro"/>
+    <xacro:include filename="$(find sucky_bringup)/urdf/ros2_control.xacro"/>
+    <xacro:include filename="$(find sucky_bringup)/urdf/sensor_sick.xacro"/>
+    <xacro:include filename="$(find sucky_bringup)/urdf/sensor_d455.urdf.xacro"/>
+
+</robot>
