@@ -112,9 +112,9 @@ def generate_launch_description():
         ]
     )
 
-    realsense_node = IncludeLaunchDescription(
+    camera_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('sucky_bringup'), 'launch', 'realsense.launch.py'
+            get_package_share_directory('sucky_bringup'), 'launch', 'camera.launch.py'
         )])
     )
 
@@ -182,7 +182,7 @@ def generate_launch_description():
         robot_controller_spawner,
         joint_state_publisher_spawner,
         sick_node,
-        realsense_node,
+        camera_node,
         #ekf_node,
         #battery_monitor_node,
         #cyclone_controller_node,
