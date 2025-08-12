@@ -104,8 +104,8 @@ def generate_launch_description():
         parameters=[{'use_sim_time': False}],
         arguments=[
             tim_launch_file_path,
-            'tf_base_frame_id:=sick_link',
-            'tf_publish_rate:=20.0',  # Reduce from 30 to 20 Hz
+            'frame_id:=sick_link',          # <-- messages will use this frame
+            'tf_publish_rate:=0.0',  # aleady pub by RSP (URDF)
             'hostname:=192.168.0.1',
             'min_ang:=-1.22173',  # -70 degrees in radians
             'max_ang:=1.22173',   # 70 degrees in radians
