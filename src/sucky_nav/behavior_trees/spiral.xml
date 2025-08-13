@@ -1,0 +1,15 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <SingleTrigger>
+      <Sequence name="CoverageNavigation">
+        <!-- 0. Checks if a TF transform is available -->
+        <TransformAvailable child="base_link" parent="map"/>
+        <!-- 1. Plan the path -->
+        <ComputePathToPose goal="{goal}" path="{spiral_path}" planner_id="SpiralSTC"/>
+        <!-- 2. Follow the path -->
+        <FollowPath path="{spiral_path}" controller_id="FollowPath" goal_checker_id="general_goal_checker"/>
+        <GoalReached/>
+      </Sequence>
+    </SingleTrigger>
+  </BehaviorTree>
+</root>
