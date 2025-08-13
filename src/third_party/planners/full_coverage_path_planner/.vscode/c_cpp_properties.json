@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/robot/sweepy_dev_ws/install/laser_filters/include/**",
+        "/home/robot/sweepy_dev_ws/install/full_coverage_path_planner/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/robot/sweepy_dev_ws/src/full_coverage_path_planner/include/**",
+        "/home/robot/sweepy_dev_ws/src/sweepy_bringup/include/**",
+        "/home/robot/sweepy_dev_ws/src/sweepy_hardware_drivers/include/**",
+        "/home/robot/sweepy_dev_ws/src/sweepy_nav/include/**",
+        "/home/robot/sweepy_dev_ws/src/sweepy_perception/include/**",
+        "/home/robot/sweepy_dev_ws/src/third_party/roboclaw/roboclaw_hardware_interface/include/**",
+        "/home/robot/sweepy_dev_ws/src/third_party/roboclaw/roboclaw_serial/include/**",
+        "/home/robot/sweepy_dev_ws/src/third_party/sensors/laser_filters/include/**",
+        "/home/robot/sweepy_dev_ws/src/third_party/sensors/realsense_gazebo_plugin/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
