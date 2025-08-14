@@ -9,7 +9,7 @@ from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
     bringup_pkg = get_package_share_directory('sucky_bringup')
-    robot_controllers_path = os.path.join(get_package_share_directory('sucky_bringup'),'config','sucky_controllers.yaml')
+    robot_controllers_path = os.path.join(get_package_share_directory('sucky_bringup'),'config','sucky_controllers_optimized.yaml')
     joy_params = os.path.join(get_package_share_directory('sucky_bringup'),'config','joystick.yaml')
     twist_mux_params = os.path.join(get_package_share_directory('sucky_bringup'),'config','twist_mux.yaml')
     sick_scan_pkg_prefix = get_package_share_directory('sick_scan_xd')
