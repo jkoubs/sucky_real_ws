@@ -9,7 +9,7 @@ amcl:
     odom_frame_id: "odom"
     global_frame_id: "map"
     tf_broadcast: true
-    transform_tolerance: 0.25
+    transform_tolerance: 0.3
 
     # Odometry noise (bump up if slip/poor odom)
     alpha1: 0.25
