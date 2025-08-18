@@ -25,14 +25,6 @@ def generate_launch_description():
     xacro.process_doc(doc)
     robot_description = {'robot_description': doc.toxml()}
 
-    # Joint State Publisher for static RViz visualization - reduce output
-    joint_state_publisher = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher',
-        output='log'  # Reduce console output
-    )
-
     # Robot State Publisher - reduce output
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -81,7 +73,7 @@ def generate_launch_description():
         parameters=[{'use_sim_time': False}],
     )
 
-    joint_state_publisher_spawner = Node(
+    joint_state_broadcaster = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
@@ -172,7 +164,6 @@ def generate_launch_description():
     # )
 
     return LaunchDescription([
-        joint_state_publisher,
         robot_state_publisher,
         joystick_node,
         teleop_node,
@@ -180,7 +171,7 @@ def generate_launch_description():
         ros2_control_node,
         twist_mux,
         robot_controller_spawner,
-        joint_state_publisher_spawner,
+        joint_state_broadcaster,
         sick_node,
         camera_node,
         #ekf_node,
