@@ -18,6 +18,8 @@ install(
 # Install Python nodes
 install(PROGRAMS
   scripts/initial_pose_publisher.py
+  scripts/cleaning_visualizer.py
+  scripts/path_visualizer.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
