@@ -5,7 +5,7 @@ from launch.actions import IncludeLaunchDescription, RegisterEventHandler, Execu
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
-from launch.event_handlers import OnProcessExit
+from launch.event_handlers import OnProcessStart, OnProcessExit
 
 def generate_launch_description():
     bringup_pkg = get_package_share_directory('sucky_bringup')
@@ -110,6 +110,40 @@ def generate_launch_description():
         )])
     )
 
+    # ---- Include AMCL (and scan_relay) launch AFTER LiDAR starts ----
+    amcl_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(get_package_share_directory('sucky_nav'), 'launch', 'amcl.launch.py')
+        ])
+    )
+
+    start_amcl_after_lidar = RegisterEventHandler(
+        OnProcessStart(
+            target_action=sick_node,
+            on_start=[amcl_launch]
+        )
+    )
+
+    return LaunchDescription([
+        robot_state_publisher,
+        joystick_node,
+        teleop_node,
+        joystick_controller_node,
+        ros2_control_node,
+        twist_mux,
+        robot_controller_spawner,
+        joint_state_broadcaster,
+        sick_node,
+        camera_node,
+        #ekf_node,
+        #battery_monitor_node,
+        #arduino_controller_node
+
+        # Gate AMCL stack on LiDAR startup
+        start_amcl_after_lidar,
+    ])
+
+
     # ekf_node = Node(
     #     package='robot_localization',
     #     executable='ekf_node',
@@ -135,47 +169,15 @@ def generate_launch_description():
     # )
 
 
-    # Cyclone controller node
-    # cyclone_controller_node = Node(
+    # arduino_controller_node = Node(
     #     package='sucky_bringup',
-    #     executable='cyclone_controller.py',
-    #     name='cyclone_controller',
+    #     executable='arduino_controller.py',
+    #     name='arduino_controller',
     #     output='log',
     #     parameters=[{
     #         'serial_port': '/dev/ttyACM0',
-    #         'baud_rate': 9600,
+    #         'baud_rate': 115200,
     #         'timeout': 2.0,
     #         'use_sim_time': False
     #     }]
     # )
-
-    # Servo controller node  
-    # servo_controller_node = Node(
-    #     package='sucky_bringup',
-    #     executable='servo_controller.py',
-    #     name='servo_controller',
-    #     output='log',
-    #     parameters=[{
-    #         'serial_port': '/dev/ttyACM0',
-    #         'baud_rate': 9600,
-    #         'timeout': 2.0,
-    #         'use_sim_time': False
-    #     }]
-    # )
-
-    return LaunchDescription([
-        robot_state_publisher,
-        joystick_node,
-        teleop_node,
-        joystick_controller_node,
-        ros2_control_node,
-        twist_mux,
-        robot_controller_spawner,
-        joint_state_broadcaster,
-        sick_node,
-        camera_node,
-        #ekf_node,
-        #battery_monitor_node,
-        #cyclone_controller_node,
-        #servo_controller_node,
-    ])
