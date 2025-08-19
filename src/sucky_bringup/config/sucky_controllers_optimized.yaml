@@ -1,7 +1,7 @@
 controller_manager:
   ros__parameters:
     use_sim_time: false
-    update_rate: 30  # Hz
+    update_rate: 50  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -18,7 +18,7 @@ diffbot_base_controller:
     wheel_radius: 0.127
 
 
-    publish_rate: 30.0
+    publish_rate: 50.0
     odom_frame_id: odom
     base_frame_id: base_footprint
 

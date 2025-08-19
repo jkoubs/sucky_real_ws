@@ -1,0 +1,370 @@
+bt_navigator:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    global_frame: map  # The global frame ID. Default: "map"
+    robot_base_frame: base_footprint  # The base frame ID of the robot. Default: "base_footprint"
+    odom_topic: /odom  # The topic name for odometry messages. Default: "/odom"
+    bt_loop_duration: 10  # Duration of the Behavior Tree loop in milliseconds. Default: 10
+    default_server_timeout: 20  # Default server timeout in seconds. Default: 20
+    plugin_lib_names:  # List of plugin libraries for Behavior Tree nodes.
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_smooth_path_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_assisted_teleop_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_drive_on_heading_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_truncate_path_local_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_path_expiring_timer_condition
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_goal_updated_controller_bt_node
+      - nav2_navigate_through_poses_action_bt_node
+      - nav2_navigate_to_pose_action_bt_node
+      - nav2_remove_passed_goals_action_bt_node
+      - nav2_planner_selector_bt_node
+      - nav2_controller_selector_bt_node
+      - nav2_goal_checker_selector_bt_node
+      - nav2_controller_cancel_bt_node
+      - nav2_path_longer_on_approach_bt_node
+      - nav2_wait_cancel_bt_node
+      - nav2_spin_cancel_bt_node
+      - nav2_back_up_cancel_bt_node
+      - nav2_assisted_teleop_cancel_bt_node
+      - nav2_drive_on_heading_cancel_bt_node
+
+bt_navigator_navigate_through_poses_rclcpp_node:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+
+bt_navigator_navigate_to_pose_rclcpp_node:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+
+controller_server:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    controller_frequency: 10.0  # Frequency of the controller updates in Hz. Default: 20.0
+    min_x_velocity_threshold: 0.001  # Minimum X velocity threshold. Default: 0.0
+    min_y_velocity_threshold: 0.0  # Minimum Y velocity threshold. Default: 0.0
+    min_theta_velocity_threshold: 0.001  # Minimum angular velocity threshold. Default: 0.0
+    failure_tolerance: 4.0  # Tolerance for failure detection. Default: 0.3
+    progress_checker_plugin: "progress_checker"  # Plugin for checking progress. Default: "nav2_controller::SimpleProgressChecker"
+    goal_checker_plugins: ["general_goal_checker"]  # Plugin for checking goal conditions. Default: "nav2_controller::SimpleGoalChecker"
+    controller_plugins: ["FollowPath"]  # List of controller plugins. Default: ["dwb_core::DWBLocalPlanner"]
+
+    # Progress checker parameters
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"  # Plugin for checking progress. Default: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.05  # Required movement radius in meters. Default: 0.5
+      movement_time_allowance: 20.0  # Time allowance for movement in seconds. Default: 10.0
+
+    # Goal checker parameters
+    general_goal_checker:
+      stateful: True  # Whether to use stateful goal checking. Default: True
+      plugin: "nav2_controller::SimpleGoalChecker"  # Plugin for checking goals. Default: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25  # XY goal tolerance in meters. Default: 0.25
+      yaw_goal_tolerance: 0.25  # Yaw goal tolerance in radians. Default: 0.25
+
+    FollowPath:
+      plugin: "nav2_mppi_controller::MPPIController"
+      transform_tolerance: 0.1
+
+      vx_std: 0.3
+      wz_std: 0.4
+
+      vx_max: 0.2
+      vx_min: -0.2
+      wz_max: 0.3
+
+      #COMPUTATION PARAMS
+      time_steps: 48
+      batch_size: 2000
+      iteration_count: 1
+      model_dt: 0.1
+
+      prune_distance: 1.0
+      temperature: 0.9
+      gamma: 0.03
+      motion_model: "DiffDrive"
+      visualize: false
+      reset_period: 1.0 # (only in Humble)
+      regenerate_noises: true
+      TrajectoryVisualizer:
+        trajectory_step: 5
+        time_step: 3
+
+      AckermannConstraints:
+        min_turning_r: 0.2
+      critics: ["ConstraintCritic", "ObstaclesCritic", "CostCritic", "GoalCritic", "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic", "PathAngleCritic", "PreferForwardCritic", "VelocityDeadbandCritic"]
+      ConstraintCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 4.0
+
+      GoalCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 0.3
+        threshold_to_consider: 0.2
+
+      GoalAngleCritic:
+        enabled: false
+        cost_power: 1
+        cost_weight: 2.0
+        threshold_to_consider: 0.5
+
+      PreferForwardCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 0.8
+        threshold_to_consider: 0.2
+        
+      ObstaclesCritic:
+        enabled: true
+        cost_power: 1
+        repulsion_weight: 2.5
+        critical_weight: 1000.0
+        consider_footprint: true
+        collision_cost: 10000.0
+        collision_margin_distance: 0.4
+        near_goal_distance: 0.5
+        inflation_radius: 0.25 # (only in Humble)
+        cost_scaling_factor: 10.0 # (only in Humble)
+
+      CostCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 3.81
+        critical_cost: 300.0
+        consider_footprint: true
+        collision_cost: 1000000.0
+        near_goal_distance: 1.0
+        trajectory_point_step: 2
+
+      PathAlignCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 1.0
+        max_path_occupancy_ratio: 0.05
+        trajectory_point_step: 1
+        threshold_to_consider: 1.0
+        offset_from_furthest: 2
+        use_path_orientations: true
+
+      PathFollowCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 1.2
+        offset_from_furthest: 3
+        threshold_to_consider: 1.0
+
+      PathAngleCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 2.5
+        offset_from_furthest: 3
+        threshold_to_consider: 0.4
+        max_angle_to_furthest: 1.0
+        mode: 2
+
+      VelocityDeadbandCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 8.0
+        deadband_velocities: [0.08, 0.0, 0.1]
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0  # Frequency to update the local costmap in Hz. Default: 5.0
+      publish_frequency: 2.0  # Frequency to publish the local costmap in Hz. Default: 2.0
+      transform_tolerance: 0.3
+      global_frame: odom  # The frame ID of the global frame. Default: "odom"
+      robot_base_frame: base_footprint  # The frame ID of the robot base. Default: "base_footprint"
+      use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+      rolling_window: true  # Whether to use a rolling window for the local costmap. Default: true
+      width: 3  # Width of the local costmap in meters. Default: 10.0
+      height: 3  # Height of the local costmap in meters. Default: 10.0
+      resolution: 0.05  # Resolution of the local costmap in meters per cell. Default: 0.05
+      # footprint: "[[-.178, .533], [-.178, -.533], [.9, -.533], [.9, .533]]"  # SWEEPY footprint in the local costmap. Default: "[]"
+      footprint: "[[-0.39, 0.34], [-0.39, -0.34], [0.3, -0.34], [0.3, 0.34]]" # SUCKY footprint
+      plugins: ["voxel_layer", "inflation_layer"]  # List of plugins for the local costmap. Default: ["static_layer", "obstacle_layer", "inflation_layer"]
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"  # Plugin for the inflation layer. Default: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0  # Cost scaling factor for inflation layer. Default: 10.0
+        inflation_radius: 0.35  # Inflation radius in meters. Default: 0.55
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"  # Plugin for the voxel layer. Default: "nav2_costmap_2d::VoxelLayer"
+        enabled: True  # Whether the voxel layer is enabled. Default: true
+        publish_voxel_map: False  # Whether to publish the voxel map. Default: false
+        origin_z: 0.0  # Origin Z coordinate for the voxel layer in meters. Default: 0.0
+        z_resolution: 0.1  # Resolution in the Z direction for the voxel layer in meters. Default: 0.2
+        z_voxels: 8  # Number of voxels in the Z direction. Default: 10
+        max_obstacle_height: 2.0  # Maximum obstacle height in meters. Default: 2.0
+        mark_threshold: 0  # Threshold for marking obstacles. Default: 0
+        observation_sources: scan  # List of observation sources for the voxel layer. Default: "pointcloud"
+        scan:
+          topic: /scan_be  # The topic name for incoming laser scans. Default: scan
+          max_obstacle_height: 2.0  # Maximum obstacle height in meters. Default: 2.0
+          clearing: True  # Whether to clear obstacles. Default: true
+          marking: True  # Whether to mark obstacles. Default: true
+          data_type: "LaserScan"  # Type of data for the observation source. Default: "LaserScan"
+          raytrace_max_range: 18.0  # Maximum range for raytracing in meters. Default: 30.0
+          raytrace_min_range: 0.0  # Minimum range for raytracing in meters. Default: 0.0
+          obstacle_max_range: 10.0  # Maximum range for obstacle detection in meters. Default: 2.5
+          obstacle_min_range: 0.15  # Minimum range for obstacle detection in meters. Default: 0.0
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"  # Plugin for the static layer. Default: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True  # Whether to use transient local subscription for the static layer. Default: false
+      always_send_full_costmap: True  # Whether to always send the full costmap. Default: false
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 2.0  # Frequency to update the global costmap in Hz. Default: 1.0
+      publish_frequency: 2.0  # Frequency to publish the global costmap in Hz. Default: 1.0
+      transform_tolerance: 0.3
+      global_frame: map  # The frame ID of the global frame. Default: "map"
+      robot_base_frame: base_footprint  # The frame ID of the robot base. Default: "base_footprint"
+      use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+      # footprint: "[[-.178, .533], [-.178, -.533], [.9, -.533], [.9, .533]]"  # SWEEPY footprint
+      footprint: "[[-0.39, 0.34], [-0.39, -0.34], [0.3, -0.34], [0.3, 0.34]]" # SUCKY footprint
+      resolution: 0.05  # Resolution of the global costmap in meters per cell. Default: 0.05
+      track_unknown_space: true  # Whether to track unknown space in the global costmap. Default: false
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]  # List of plugins for the global costmap. Default: ["static_layer", "obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"  # Plugin for the obstacle layer. Default: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True  # Whether the obstacle layer is enabled. Default: true
+        observation_sources: scan  # List of observation sources for the obstacle layer. Default: "pointcloud"
+        scan:
+          topic: /scan_be  # The topic name for incoming laser scans. Default: scan
+          max_obstacle_height: 2.0  # Maximum obstacle height in meters. Default: 2.0
+          clearing: True  # Whether to clear obstacles. Default: true
+          marking: True  # Whether to mark obstacles. Default: true
+          data_type: "LaserScan"  # Type of data for the observation source. Default: "LaserScan"
+          raytrace_max_range: 18.0  # Maximum range for raytracing in meters. Default: 30.0
+          raytrace_min_range: 0.0  # Minimum range for raytracing in meters. Default: 0.0
+          obstacle_max_range: 10.0  # Maximum range for obstacle detection in meters. Default: 2.5
+          obstacle_min_range: 0.15  # Minimum range for obstacle detection in meters. Default: 0.0
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"  # Plugin for the static layer. Default: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True  # Whether to use transient local subscription for the static layer. Default: false
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"  # Plugin for the inflation layer. Default: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0  # Cost scaling factor for inflation layer. Default: 10.0
+        inflation_radius: 0.35  # Inflation radius in meters. Default: 0.55
+      always_send_full_costmap: True  # Whether to always send the full costmap. Default: false
+
+map_server:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    yaml_filename: ""  # Full path to the map YAML file. Default: None
+
+map_saver:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    save_map_timeout: 5.0  # Timeout for saving the map in seconds. Default: 5.0
+    free_thresh_default: 0.25  # Default threshold for free space in the map. Default: 0.25
+    occupied_thresh_default: 0.65  # Default threshold for occupied space in the map. Default: 0.65
+    map_subscribe_transient_local: True  # Whether to use transient local subscription for the map. Default: false
+
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 1.0  # Expected frequency of the planner in Hz. Default: 20.0
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    planner_plugins: ["SpiralSTC"]  # List of planner plugins. Default: ["GridBased"]
+    tf_buffer_duration: 30.0  # Duration to buffer transforms in seconds. Default: 10.0
+    SpiralSTC:
+      plugin: full_coverage_path_planner/SpiralSTC
+      robot_radius: 0.30
+      tool_radius: 0.30
+      interpolation_resolution: 0.4
+
+smoother_server:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    smoother_plugins: ["simple_smoother"]  # List of smoother plugins. Default: ["simple_smoother"]
+    simple_smoother:
+      plugin: "nav2_smoother::SimpleSmoother"  # Plugin for the simple smoother. Default: "nav2_smoother::SimpleSmoother"
+      tolerance: 0.05  # Tolerance for the smoother. Default: 1.0e-10
+      max_its: 1000  # Maximum iterations for the smoother. Default: 1000
+      do_refinement: True  # Whether to do refinement. Default: True
+      refinement_num: 5
+      keep_endpoints: true
+      allow_path_shorten: true
+
+behavior_server:
+  ros__parameters:
+    costmap_topic: local_costmap/costmap_raw  # Topic name for the local costmap. Default: "local_costmap/costmap_raw"
+    footprint_topic: local_costmap/published_footprint  # Topic name for the robot footprint. Default: "local_costmap/published_footprint"
+    cycle_frequency: 10.0  # Frequency of the behavior server in Hz. Default: 10.0
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]  # List of behavior plugins. Default: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    spin:
+      plugin: "nav2_behaviors/Spin"  # Plugin for the spin behavior. Default: "nav2_behaviors/Spin"
+    backup:
+      plugin: "nav2_behaviors/BackUp"  # Plugin for the backup behavior. Default: "nav2_behaviors/BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors/DriveOnHeading"  # Plugin for the drive on heading behavior. Default: "nav2_behaviors/DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors/Wait"  # Plugin for the wait behavior. Default: "nav2_behaviors/Wait"
+    assisted_teleop:
+      plugin: "nav2_behaviors/AssistedTeleop"  # Plugin for the assisted teleop behavior. Default: "nav2_behaviors/AssistedTeleop"
+    global_frame: odom  # The frame ID of the global frame. Default: "odom"
+    robot_base_frame: base_footprint  # The frame ID of the robot base. Default: "base_footprint"
+    transform_tolerance: 0.5  # Transform tolerance in seconds. Default: 0.5
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    simulate_ahead_time: 2.0  # Time to simulate ahead in seconds. Default: 2.0
+    max_rotational_vel: 0.4  # Maximum rotational velocity in radians per second. Default: 1.0
+    min_rotational_vel: 0.1  # Minimum rotational velocity in radians per second. Default: 0.4
+    rotational_acc_lim: 1.2  # Rotational acceleration limit in radians per second squared. Default: 3.2
+
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    loop_rate: 20  # Loop rate for the waypoint follower in Hz. Default: 20
+    stop_on_failure: false # Whether to stop on failure. Default: false
+    waypoint_task_executor_plugin: "wait_at_waypoint"  # Plugin for executing tasks at waypoints. Default: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"  # Plugin for the wait at waypoint task. Default: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True  # Whether the wait at waypoint task is enabled. Default: true
+      waypoint_pause_duration: 200  # Pause duration at waypoints in milliseconds. Default: 0
+
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
+    smoothing_frequency: 20.0  # Frequency of the velocity smoother in Hz. Default: 20.0
+    scale_velocities: False  # Whether to scale velocities. Default: false
+    feedback: "OPEN_LOOP"  # Feedback type for the velocity smoother. Default: "OPEN_LOOP"
+    max_velocity: [0.2, 0.0, 0.3]  # Maximum velocities for X, Y, and angular velocities. Default: [0.26, 0.0, 1.0]
+    min_velocity: [-0.2, 0.0, -0.3]  # Minimum velocities for X, Y, and angular velocities. Default: [-0.26, 0.0, -1.0]
+    max_accel: [0.8, 0.0, 1.2]  # Maximum accelerations for X, Y, and angular accelerations. Default: [2.5, 0.0, 3.2]
+    max_decel: [-0.8, 0.0, -1.2]  # Maximum decelerations for X, Y, and angular decelerations. Default: [-2.5, 0.0, -3.2]
+    odom_topic: "odom"  # Topic name for odometry messages. Default: "odom"
+    odom_duration: 0.1  # Duration to keep odometry messages in seconds. Default: 0.1
+    deadband_velocity: [0.03, 0.0, 0.04]  # Deadband for velocities in X, Y, and angular velocities. Default: [0.0, 0.0, 0.0]
+    velocity_timeout: 1.0  # Timeout for velocity messages in seco
