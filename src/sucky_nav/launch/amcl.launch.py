@@ -1,4 +1,6 @@
 from launch import LaunchDescription
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessStart
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from os.path import join
@@ -7,6 +9,14 @@ def generate_launch_description():
     nav_pkg = "sucky_nav"  
     map_file  = join(get_package_share_directory(nav_pkg), "maps",   "quad-shop-walkie-talkie-cleaned.yaml")
     amcl_config = join(get_package_share_directory(nav_pkg), "config", "amcl.yaml")
+
+    scan_relay = Node(
+        package="sucky_bringup",
+        executable="scan_relay.py",
+        name="scan_relay",
+        output="screen",
+        respawn=True,
+    )
 
     map_server = Node(
         package="nav2_map_server",
@@ -55,4 +65,17 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([map_server, amcl, lifecycle, initial_pose_node])
+    # Only start AMCL + lifecycle AFTER scan_relay has started
+    start_after_relay = RegisterEventHandler(
+        OnProcessStart(
+            target_action=scan_relay,
+            on_start=[amcl, lifecycle]
+        )
+    )
+
+    return LaunchDescription([
+        scan_relay,          # starts first
+        map_server,          # can start in parallel
+        start_after_relay,   # gates AMCL + lifecycle on relay start
+        initial_pose_node
+    ])
