@@ -28,6 +28,9 @@ install(
 # Install Python nodes
 install(PROGRAMS
   scripts/sucky_joy.py
+  scripts/scan_viz_relay.py
+  scripts/scan_relay.py
+  scripts/arduino_controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 if(BUILD_TESTING)
