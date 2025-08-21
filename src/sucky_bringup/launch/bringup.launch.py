@@ -110,6 +110,19 @@ def generate_launch_description():
         )])
     )
 
+    arduino_controller_node = Node(
+        package='sucky_bringup',
+        executable='arduino_controller.py',
+        name='arduino_controller',
+        output='log',
+        parameters=[{
+            'serial_port': '/dev/ttyACM0',
+            'baud_rate': 115200,
+            'timeout': 2.0,
+            'use_sim_time': False
+        }]
+    )
+
     # ---- Include AMCL (and scan_relay) launch AFTER LiDAR starts ----
     amcl_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -135,11 +148,7 @@ def generate_launch_description():
         joint_state_broadcaster,
         sick_node,
         camera_node,
-        #ekf_node,
-        #battery_monitor_node,
-        #arduino_controller_node
-
-        # Gate AMCL stack on LiDAR startup
+        arduino_controller_node,
         start_amcl_after_lidar,
     ])
 
@@ -169,15 +178,3 @@ def generate_launch_description():
     # )
 
 
-    # arduino_controller_node = Node(
-    #     package='sucky_bringup',
-    #     executable='arduino_controller.py',
-    #     name='arduino_controller',
-    #     output='log',
-    #     parameters=[{
-    #         'serial_port': '/dev/ttyACM0',
-    #         'baud_rate': 115200,
-    #         'timeout': 2.0,
-    #         'use_sim_time': False
-    #     }]
-    # )
