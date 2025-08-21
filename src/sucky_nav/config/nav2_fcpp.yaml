@@ -114,9 +114,8 @@ controller_server:
         trajectory_step: 5
         time_step: 3
 
-      AckermannConstraints:
-        min_turning_r: 0.2
       critics: ["ConstraintCritic", "ObstaclesCritic", "CostCritic", "GoalCritic", "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic", "PathAngleCritic", "PreferForwardCritic", "VelocityDeadbandCritic"]
+
       ConstraintCritic:
         enabled: true
         cost_power: 1
@@ -149,7 +148,7 @@ controller_server:
         collision_cost: 10000.0
         collision_margin_distance: 0.4
         near_goal_distance: 0.5
-        inflation_radius: 0.25 # (only in Humble)
+        inflation_radius: 0.53 # (only in Humble)
         cost_scaling_factor: 10.0 # (only in Humble)
 
       CostCritic:
@@ -160,7 +159,7 @@ controller_server:
         consider_footprint: true
         collision_cost: 1000000.0
         near_goal_distance: 1.0
-        trajectory_point_step: 2
+        # trajectory_point_step: 2
 
       PathAlignCritic:
         enabled: true
