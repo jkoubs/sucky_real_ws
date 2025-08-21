@@ -7,7 +7,8 @@ from os.path import join
 
 def generate_launch_description():
     nav_pkg = "sucky_nav"  
-    map_file  = join(get_package_share_directory(nav_pkg), "maps",   "quad-shop-walkie-talkie-cleaned.yaml")
+    # map_file  = join(get_package_share_directory(nav_pkg), "maps",   "quad-shop-walkie-talkie-cleaned.yaml")
+    map_file  = join(get_package_share_directory(nav_pkg), "maps",   "zone-A-130-rotated-cleaned.yaml")
     amcl_config = join(get_package_share_directory(nav_pkg), "config", "amcl.yaml")
 
     scan_relay = Node(
