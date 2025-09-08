@@ -99,14 +99,15 @@ def generate_launch_description():
             'frame_id:=sick_link',          # <-- messages will use this frame
             'tf_publish_rate:=0.0',  # aleady pub by RSP (URDF)
             'hostname:=192.168.0.1',
-            'min_ang:=-1.22173',  # -70 degrees in radians
-            'max_ang:=1.22173',   # 70 degrees in radians
+            'min_ang:=-1.18',  # -70 degrees in radians
+            'max_ang:=1.18',   # 70 degrees in radians
         ]
     )
 
     camera_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('sucky_bringup'), 'launch', 'camera.launch.py'
+            # get_package_share_directory('sucky_bringup'), 'launch', 'camera.launch.py'
+            get_package_share_directory('sucky_bringup'), 'launch', 'camera_localization_rtabmap.launch.py'
         )])
     )
 
@@ -149,7 +150,7 @@ def generate_launch_description():
         sick_node,
         camera_node,
         arduino_controller_node,
-        start_amcl_after_lidar,
+        #start_amcl_after_lidar,
     ])
 
 
