@@ -1,0 +1,50 @@
+scan_to_scan_filter_chain:
+  ros__parameters:
+
+    filter1:
+      name: range_clip
+      type: laser_filters/LaserScanRangeFilter
+      params:
+        lower_threshold: 0.30
+        upper_threshold: 16.0
+        lower_replacement_value: NaN
+        upper_replacement_value: NaN
+
+    filter2:
+      name: speckle
+      type: laser_filters/LaserScanSpeckleFilter
+      params:
+        filter_type: 1
+        max_range: 16.0
+        max_range_difference: 0.25
+        filter_window: 3
+
+    filter3:
+      type: laser_filters/LaserArrayFilter
+      name: median_ranges
+      params:
+        range_filter_chain:
+          filter1:
+            name: median_ranges
+            type: filters/MultiChannelMedianFilterFloat
+            params:
+              number_of_observations: 3
+              unused: 10
+
+
+    # filter4:
+    #   name: intensity
+    #   type: laser_filters/LaserScanIntensityFilter
+    #   params:
+    #     lower_threshold: 8000.0
+    #     upper_threshold: 100000.0
+    #     disp_histogram: 0
+
+    # filter5:
+    #   name: shadows
+    #   type: laser_filters/ScanShadowsFilter
+    #   params:
+    #     min_angle: 10.0
+    #     max_angle: 170.0
+    #     neighbors: 20
+    #     window: 1
