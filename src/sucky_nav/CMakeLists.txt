@@ -12,7 +12,7 @@ find_package(sensor_msgs REQUIRED)
 
 # Install directories
 install(
-  DIRECTORY launch config scripts maps behavior_trees
+  DIRECTORY launch config scripts maps behavior_trees rtabmap_database
   DESTINATION share/${PROJECT_NAME}
 )
 # Install Python nodes
@@ -20,6 +20,7 @@ install(PROGRAMS
   scripts/initial_pose_publisher.py
   scripts/cleaning_visualizer.py
   scripts/path_visualizer.py
+  scripts/demo_coverage_optimized.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
