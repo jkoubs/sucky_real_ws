@@ -58,5 +58,5 @@ ros2 launch sucky_nav opennav_coverage.launch.py
 
 
 ```bash
-ros2 run sucky_nav demo_coverage_optimized_v3.py
+ros2 run sucky_nav demo_coverage_optimized.py
 ```
