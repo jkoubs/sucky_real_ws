@@ -1,0 +1,7 @@
+image: zone-C-140cm-rotated-cleaned.pgm
+resolution: 0.05
+origin: [-7.1099, -7.42586, 0.0]
+negate: 0
+occupied_thresh: 0.5
+free_thresh: 0.196
+
