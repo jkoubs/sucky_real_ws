@@ -32,7 +32,7 @@ class CleanedAreaVisualizer(Node):
 
         self.pose_sub = self.create_subscription(
             PoseWithCovarianceStamped,
-            '/amcl_pose',
+            '/localization_pose',
             self.pose_callback,
             10
         )
