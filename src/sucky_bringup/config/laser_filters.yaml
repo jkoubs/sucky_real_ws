@@ -5,8 +5,8 @@ scan_to_scan_filter_chain:
       name: range_clip
       type: laser_filters/LaserScanRangeFilter
       params:
-        lower_threshold: 0.30
-        upper_threshold: 16.0
+        lower_threshold: 0.6
+        upper_threshold: 6.0
         lower_replacement_value: NaN
         upper_replacement_value: NaN
 
@@ -15,10 +15,11 @@ scan_to_scan_filter_chain:
       type: laser_filters/LaserScanSpeckleFilter
       params:
         filter_type: 1
-        max_range: 16.0
+        max_range: 6.0
         max_range_difference: 0.25
         filter_window: 3
-
+        # max_range_difference: 0.15    # tighter than 0.25 => catches finer specks
+        # filter_window: 2              # 2 or 3; smaller = less edge erosion
     filter3:
       type: laser_filters/LaserArrayFilter
       name: median_ranges
@@ -28,7 +29,7 @@ scan_to_scan_filter_chain:
             name: median_ranges
             type: filters/MultiChannelMedianFilterFloat
             params:
-              number_of_observations: 3
+              number_of_observations: 3 # try 5 or 7
               unused: 10
 
 
