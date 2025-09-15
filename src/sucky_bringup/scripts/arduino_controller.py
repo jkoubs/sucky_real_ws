@@ -62,7 +62,7 @@ class ArduinoController(Node):
         super().__init__('arduino_controller')
         
         # Declare parameters
-        self.declare_parameter('serial_port', '/dev/ttyACM0')
+        self.declare_parameter('serial_port', '/dev/arduino')
         self.declare_parameter('baud_rate', 115200)
         self.declare_parameter('timeout', 2.0)
         
