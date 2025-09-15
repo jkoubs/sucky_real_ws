@@ -9,13 +9,6 @@ ros2 launch sucky_bringup bringup.launch.py
 
 ```bash
 cd ~/sucky_ws/
-colcon build --packages-select sucky_bringup
-source install/setup.bash
-ros2 launch sucky_bringup depth_scan_filters.launch.py
-```
-
-```bash
-cd ~/sucky_ws/
 colcon build --packages-select sucky_nav
 source install/setup.bash
 ros2 launch sucky_nav rtabmap_localization.launch.py
