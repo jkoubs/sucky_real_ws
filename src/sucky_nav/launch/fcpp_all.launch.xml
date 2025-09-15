@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Include your main Nav2 launch file -->
+  <include file="$(find-pkg-share sucky_nav)/launch/fcpp.launch.py"/>
+
+  <!-- Include your visualizers launch file -->
+  <include file="$(find-pkg-share sucky_nav)/launch/fcpp_visualizers.launch.py"/>
+</launch>
