@@ -12,7 +12,7 @@ def generate_launch_description():
     # map_file  = join(get_package_share_directory(nav_pkg), "maps",   "quad-shop-walkie-talkie-cleaned.yaml")
     # map_file = join(get_package_share_directory(nav_pkg), "maps", "quad-shop-140cm-cleaned.yaml")
     # map_file = join(get_package_share_directory(nav_pkg), "maps", "quad-shop-140cm-cleaned.yaml")
-    map_file = join(get_package_share_directory(nav_pkg), "maps", "zone-C-140cm-rotated-cleaned-framed-v1.yaml")
+    map_file = join(get_package_share_directory(nav_pkg), "maps", "zone-C-140cm-rotated-cleaned-framed-v2.yaml")
     
 
 
