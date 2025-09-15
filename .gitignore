@@ -7,3 +7,9 @@ log/
 *.db
 
 src/sucky_nav/config/other/
+
+# RTAB-Map
+src/sucky_nav/rtabmap_database/
+*.db
+*.db3
+*.backup.db
