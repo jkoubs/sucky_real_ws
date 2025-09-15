@@ -14,6 +14,7 @@ def generate_launch_description():
     twist_mux_params = os.path.join(get_package_share_directory('sucky_bringup'),'config','twist_mux.yaml')
     sick_scan_pkg_prefix = get_package_share_directory('sick_scan_xd')
     tim_launch_file_path = os.path.join(sick_scan_pkg_prefix, 'launch/sick_tim_7xx.launch')
+    laser_filters_params = os.path.join(get_package_share_directory('sucky_bringup'), "config", "laser_filters.yaml")
     #ekf_params_file = os.path.join(get_package_share_directory('sucky_nav'), 'config', 'ekf.yaml')
 
     # Load and Process Xacro
@@ -111,32 +112,46 @@ def generate_launch_description():
         )])
     )
 
+    depth_to_laserscan = Node(
+        package="depthimage_to_laserscan",
+        executable="depthimage_to_laserscan_node",
+        name="depthimage_to_laserscan",
+        remappings=[
+            ("depth", "/camera/d455/depth/image_rect_raw"),
+            ("depth_camera_info", "/camera/d455/depth/camera_info"),
+            ("scan", "/scan_depth" ),
+        ],
+        parameters=[{
+            "output_frame": "d455_link",
+            "range_min": 0.6,
+            "range_max": 6.0,
+            "scan_time": 0.033,        # ~30 Hz depth stream
+            "scan_height": 1,          # just the center plane
+        }]
+    )
+
+    laser_filters = Node(
+        package="laser_filters",
+        executable="scan_to_scan_filter_chain",
+        name="scan_to_scan_filter_chain",
+        parameters=[laser_filters_params],
+        remappings=[("scan", "/scan_depth"), ("scan_filtered", "/scan_depth_filtered")],
+        output="screen",
+        )
+
     arduino_controller_node = Node(
         package='sucky_bringup',
         executable='arduino_controller.py',
         name='arduino_controller',
         output='log',
         parameters=[{
-            'serial_port': '/dev/ttyACM0',
+            'serial_port': '/dev/arduino',
             'baud_rate': 115200,
             'timeout': 2.0,
             'use_sim_time': False
         }]
     )
 
-    # ---- Include AMCL (and scan_relay) launch AFTER LiDAR starts ----
-    amcl_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            os.path.join(get_package_share_directory('sucky_nav'), 'launch', 'amcl.launch.py')
-        ])
-    )
-
-    start_amcl_after_lidar = RegisterEventHandler(
-        OnProcessStart(
-            target_action=sick_node,
-            on_start=[amcl_launch]
-        )
-    )
 
     return LaunchDescription([
         robot_state_publisher,
@@ -149,8 +164,9 @@ def generate_launch_description():
         joint_state_broadcaster,
         sick_node,
         camera_node,
+        depth_to_laserscan,
+        laser_filters,
         arduino_controller_node,
-        #start_amcl_after_lidar,
     ])
 
 
@@ -179,3 +195,17 @@ def generate_launch_description():
     # )
 
 
+
+    # # ---- Include AMCL (and scan_relay) launch AFTER LiDAR starts ----
+    # amcl_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         os.path.join(get_package_share_directory('sucky_nav'), 'launch', 'amcl.launch.py')
+    #     ])
+    # )
+
+    # start_amcl_after_lidar = RegisterEventHandler(
+    #     OnProcessStart(
+    #         target_action=sick_node,
+    #         on_start=[amcl_launch]
+    #     )
+    # )
