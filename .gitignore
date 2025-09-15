@@ -3,4 +3,7 @@ install/
 log/
 .colcon*/
 
+# RTAB-Map databases
+*.db
+
 src/sucky_nav/config/other/
