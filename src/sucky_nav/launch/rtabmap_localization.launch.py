@@ -17,7 +17,7 @@ def generate_launch_description():
 
 
     # db_file  = join(get_package_share_directory(nav_pkg), "rtabmap_database", "zone-B-demo-200cm.db")
-    db_file  = "/home/sweepynvidia/sucky_ws/src/sucky_nav/rtabmap_database/zone-C-200cm.db"
+    db_file  = "/home/sweepynvidia/Miscellaneous/rtabmap_database/zone-C-200cm.db"
 
     # Camera topics (RealSense D455)
     RGB_TOPIC   = "/camera/d455/color/image_raw"
