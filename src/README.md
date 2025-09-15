@@ -1,40 +1,41 @@
 # Full Coverage Path Planning 
 
 ```bash
+cd ~/sucky_ws/
 colcon build
 source install/setup.bash
 ros2 launch sucky_bringup bringup.launch.py
 ```
 
 ```bash
-
+cd ~/sucky_ws/
 colcon build --packages-select sucky_bringup
 source install/setup.bash
-ros2 launch sucky_bringup depthToLaser.launch.py
+ros2 launch sucky_bringup depth_scan_filters.launch.py
 ```
 
 ```bash
+cd ~/sucky_ws/
 colcon build --packages-select sucky_nav
 source install/setup.bash
-ros2 launch sucky_nav rtabmap_localization_v3.launch.py
+ros2 launch sucky_nav rtabmap_localization.launch.py
 ```
 
 ```bash
+cd ~/sucky_ws/
 colcon build --packages-select sucky_nav
 source install/setup.bash
-ros2 launch sucky_nav fcpp.launch.py
+ros2 launch sucky_nav fcpp_all.launch.xml
 ```
 
-
-```bash
-colcon build --packages-select sucky_nav
-source install/setup.bash
-ros2 launch sucky_nav fcpp_visualizers.launch.py
-```
 
 # Fox Glove
 ```bash
 ros2 launch foxglove_bridge foxglove_bridge_launch.xml port:=8765
+```
+
+```bash
+ros2 run foxglove_bridge foxglove_bridge --ros-args -p send_buffer_limit:=100000000
 ```
 
 
