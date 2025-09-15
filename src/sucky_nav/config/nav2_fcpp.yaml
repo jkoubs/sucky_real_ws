@@ -65,10 +65,10 @@ controller_server:
   ros__parameters:
     use_sim_time: false  # Use simulation time (true) or real time (false). Default: false
     controller_frequency: 10.0  # Frequency of the controller updates in Hz. Default: 20.0
-    min_x_velocity_threshold: 0.001  # Minimum X velocity threshold. Default: 0.0
+    min_x_velocity_threshold: 0.08  # Minimum X velocity threshold. Default: 0.0
     min_y_velocity_threshold: 0.0  # Minimum Y velocity threshold. Default: 0.0
-    min_theta_velocity_threshold: 0.001  # Minimum angular velocity threshold. Default: 0.0
-    failure_tolerance: 4.0  # Tolerance for failure detection. Default: 0.3
+    min_theta_velocity_threshold: 0.1  # Minimum angular velocity threshold. Default: 0.0
+    failure_tolerance: 8.0  # Tolerance for failure detection. Default: 0.3
     progress_checker_plugin: "progress_checker"  # Plugin for checking progress. Default: "nav2_controller::SimpleProgressChecker"
     goal_checker_plugins: ["general_goal_checker"]  # Plugin for checking goal conditions. Default: "nav2_controller::SimpleGoalChecker"
     controller_plugins: ["FollowPath"]  # List of controller plugins. Default: ["dwb_core::DWBLocalPlanner"]
@@ -91,11 +91,11 @@ controller_server:
       transform_tolerance: 0.1
 
       vx_std: 0.3
-      wz_std: 0.4
+      wz_std: 0.8
 
-      vx_max: 0.2
-      vx_min: -0.2
-      wz_max: 0.3
+      vx_max: 0.3
+      vx_min: -0.3
+      wz_max: 0.6
 
       #COMPUTATION PARAMS
       time_steps: 48
@@ -223,15 +223,18 @@ local_costmap:
         mark_threshold: 0  # Threshold for marking obstacles. Default: 0
         observation_sources: scan  # List of observation sources for the voxel layer. Default: "pointcloud"
         scan:
-          topic: /scan_depth  # The topic name for incoming laser scans. Default: scan
+          topic: /scan_depth_filtered  # The topic name for incoming laser scans. Default: scan
           max_obstacle_height: 2.0  # Maximum obstacle height in meters. Default: 2.0
           clearing: True  # Whether to clear obstacles. Default: true
           marking: True  # Whether to mark obstacles. Default: true
           data_type: "LaserScan"  # Type of data for the observation source. Default: "LaserScan"
-          raytrace_max_range: 18.0  # Maximum range for raytracing in meters. Default: 30.0
+          raytrace_max_range: 7.0  # Maximum range for raytracing in meters. Default: 30.0
           raytrace_min_range: 0.0  # Minimum range for raytracing in meters. Default: 0.0
-          obstacle_max_range: 10.0  # Maximum range for obstacle detection in meters. Default: 2.5
+          obstacle_max_range: 5.0  # Maximum range for obstacle detection in meters. Default: 2.5
           obstacle_min_range: 0.6  # Minimum range for obstacle detection in meters. Default: 0.0
+          inf_is_valid: true                 # +Inf beams clear along the ray
+          expected_update_rate: 0.09         # ~1/15s * 1.35 margin
+          observation_persistence: 0.10      # short so dust hits expire fast
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"  # Plugin for the static layer. Default: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True  # Whether to use transient local subscription for the static layer. Default: false
@@ -250,7 +253,7 @@ global_costmap:
       footprint: "[[-0.39, 0.34], [-0.39, -0.34], [0.3, -0.34], [0.3, 0.34]]" # SUCKY footprint
       resolution: 0.05  # Resolution of the global costmap in meters per cell. Default: 0.05
       track_unknown_space: true  # Whether to track unknown space in the global costmap. Default: false
-      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]  # List of plugins for the global costmap. Default: ["static_layer", "obstacle_layer", "inflation_layer"]
+      # plugins: ["static_layer", "obstacle_layer", "inflation_layer"]  # List of plugins for the global costmap. Default: ["static_layer", "obstacle_layer", "inflation_layer"]
       plugins: ["static_layer", "inflation_layer"]  # List of plugins for the global costmap. Default: ["static_layer", "obstacle_layer", "inflation_layer"]
       # obstacle_layer:
       #   plugin: "nav2_costmap_2d::ObstacleLayer"  # Plugin for the obstacle layer. Default: "nav2_costmap_2d::ObstacleLayer"
@@ -359,10 +362,10 @@ velocity_smoother:
     smoothing_frequency: 20.0  # Frequency of the velocity smoother in Hz. Default: 20.0
     scale_velocities: False  # Whether to scale velocities. Default: false
     feedback: "OPEN_LOOP"  # Feedback type for the velocity smoother. Default: "OPEN_LOOP"
-    max_velocity: [0.2, 0.0, 0.3]  # Maximum velocities for X, Y, and angular velocities. Default: [0.26, 0.0, 1.0]
-    min_velocity: [-0.2, 0.0, -0.3]  # Minimum velocities for X, Y, and angular velocities. Default: [-0.26, 0.0, -1.0]
-    max_accel: [0.8, 0.0, 1.2]  # Maximum accelerations for X, Y, and angular accelerations. Default: [2.5, 0.0, 3.2]
-    max_decel: [-0.8, 0.0, -1.2]  # Maximum decelerations for X, Y, and angular decelerations. Default: [-2.5, 0.0, -3.2]
+    max_velocity: [0.3, 0.0, 0.6]  # Maximum velocities for X, Y, and angular velocities. Default: [0.26, 0.0, 1.0]
+    min_velocity: [-0.3, 0.0, -0.6]  # Minimum velocities for X, Y, and angular velocities. Default: [-0.26, 0.0, -1.0]
+    max_accel: [1.0, 0.0, 1.6]  # Maximum accelerations for X, Y, and angular accelerations. Default: [2.5, 0.0, 3.2]
+    max_decel: [-1.0, 0.0, -1.6]  # Maximum decelerations for X, Y, and angular decelerations. Default: [-2.5, 0.0, -3.2]
     odom_topic: "odom"  # Topic name for odometry messages. Default: "odom"
     odom_duration: 0.1  # Duration to keep odometry messages in seconds. Default: 0.1
     deadband_velocity: [0.03, 0.0, 0.04]  # Deadband for velocities in X, Y, and angular velocities. Default: [0.0, 0.0, 0.0]
