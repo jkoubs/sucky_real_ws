@@ -33,6 +33,8 @@ From the database you can do some post processing and debugging. Here we have lo
 
 You could also **export the 3d point cloud data and the 2d map**.
 
+[▶ Watch RTAB-Map Demo](https://drive.google.com/file/d/1H60fA8peap0IDlCbI1Gu_mGmpk1Iw4iS/view?usp=sharing)
+
 ## Collect RTAB-Map Input Topics for Offline Mapping
 
 ```bash
@@ -84,13 +86,11 @@ source install/setup.bash
 ros2 launch sucky_nav fcpp_all.launch.py
 ```
 
-
-
 **Finally you just need to trigger navigation in Foxglove by setting a goal pose anywhere in the map.**
 
 
+[▶ Watch Full Coverage Path Planning Demo](https://drive.google.com/file/d/1f9pqH224ezJdJbsfCKudRruhQarW7Mpy/view?usp=sharing)
 
 
 
-
-
+[▶ Watch Cleaning Demo](https://drive.google.com/file/d/1JkRt5GwfBvF_SHl-lVtkX9OxRZKRe9P_/view?usp=sharing)
