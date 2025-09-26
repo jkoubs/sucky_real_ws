@@ -31,6 +31,7 @@ install(PROGRAMS
   scripts/scan_viz_relay.py
   scripts/scan_relay.py
   scripts/arduino_controller.py
+  scripts/center_beam_lidar.py
   DESTINATION lib/${PROJECT_NAME}
 )
 if(BUILD_TESTING)
