@@ -11,7 +11,6 @@ def generate_launch_description():
     nav_pkg  = "sucky_nav"        # YAML map + initial_pose script
     # map_file  = join(get_package_share_directory(nav_pkg), "maps",   "quad-shop-walkie-talkie-cleaned.yaml")
     # map_file = join(get_package_share_directory(nav_pkg), "maps", "quad-shop-140cm-cleaned.yaml")
-    # map_file = join(get_package_share_directory(nav_pkg), "maps", "quad-shop-140cm-cleaned.yaml")
     map_file = join(get_package_share_directory(nav_pkg), "maps", "zone-C-140cm-rotated-cleaned-framed-v3.yaml")
     
 
