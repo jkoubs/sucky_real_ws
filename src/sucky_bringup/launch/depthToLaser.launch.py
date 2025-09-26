@@ -15,9 +15,9 @@ def generate_launch_description():
             parameters=[{
                 "output_frame": "d455_link",
                 "range_min": 0.6,
-                "range_max": 6.0,
+                "range_max": 3.0,
                 "scan_time": 0.033,        # ~30 Hz depth stream
-                "scan_height": 1,          # just the center plane
+                "scan_height": 40,          # just the center plane
             }]
         )
     ])
