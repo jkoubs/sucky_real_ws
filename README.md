@@ -101,9 +101,7 @@ For **step-by-step instructions on deploying and running the robot**, please ref
 
 ## 3D SLAM with RTAB-Map
 
-<div align="center">
-  <img src="doc/mapping/combined-side-by-side-fast-x50.mp4" alt="base" width="600"/>
-</div>
+[▶ Watch RTAB-Map Demo](https://drive.google.com/file/d/1H60fA8peap0IDlCbI1Gu_mGmpk1Iw4iS/view?usp=sharing)
 
 From this 3D map, we can extract the point cloud data:
 
@@ -120,15 +118,12 @@ This 3D map allows us to extract a 2D slice that will serve as the base for navi
 
 ## Full Coverage Path Planning
 
-<div align="center">
-  <img src="doc/nav-only-speedup-x50.mp4" alt="base" width="600"/>
-</div>
+[▶ Watch Full Coverage Path Planning Demo](https://drive.google.com/file/d/1f9pqH224ezJdJbsfCKudRruhQarW7Mpy/view?usp=sharing)
+
 
 ## Cleaning Demo
 
-<div align="center">
-  <img src="cleaning-speedup-x20.mp4" alt="base" width="600"/>
-</div>
+[▶ Watch Cleaning Demo](https://drive.google.com/file/d/1JkRt5GwfBvF_SHl-lVtkX9OxRZKRe9P_/view?usp=sharing)
 
 # Ideas for Improvement
 
